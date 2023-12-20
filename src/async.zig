@@ -3,6 +3,7 @@
 const std = @import("std");
 const internal = @import("internal.zig");
 const Futex = std.Thread.Futex;
+const AtomicValue = if (@hasDecl(std.atomic, "Value")) std.atomic.Value else std.atomic.Atomic; // support zig 0.11 as well as current master
 
 pub const ThreadPool = struct {
     list: std.ArrrayList(ThreadEntry),
@@ -15,7 +16,7 @@ pub const ThreadPool = struct {
         thread: std.Thread,
         /// The last time a task was executed on this thread, in milliseconds.
         last_used: i64,
-        busy: std.atomic.Value(bool) = false,
+        busy: AtomicValue(bool) = false,
     };
 
     pub fn init(allocator: std.mem.Allocator) ThreadPool {

@@ -5,6 +5,7 @@ const internal = @import("../internal.zig");
 const Size = dataStructures.Size;
 const Atom = dataStructures.Atom;
 const StringAtom = dataStructures.StringAtom;
+const AtomicValue = if (@hasDecl(std.atomic, "Value")) std.atomic.Value else std.atomic.Atomic; // support zig 0.11 as well as current master
 
 pub const TextArea = struct {
     pub usingnamespace internal.All(TextArea);
@@ -12,7 +13,7 @@ pub const TextArea = struct {
     peer: ?backend.TextArea = null,
     widget_data: TextArea.WidgetData = .{},
     text: StringAtom = StringAtom.of(""),
-    _wrapperTextBlock: std.atomic.Value(bool) = std.atomic.Value(bool).init(false),
+    _wrapperTextBlock: AtomicValue(bool) = AtomicValue(bool).init(false),
 
     // TODO: replace with TextArea.setFont(.{ .family = "monospace" }) ?
     /// Whether to let the system choose a monospace font for us and use it in this TextArea..

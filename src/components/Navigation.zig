@@ -4,6 +4,7 @@ const internal = @import("../internal.zig");
 const Size = @import("../data.zig").Size;
 const Atom = @import("../data.zig").Atom;
 const Widget = @import("../widget.zig").Widget;
+const AtomicValue = if (@hasDecl(std.atomic, "Value")) std.atomic.Value else std.atomic.Atomic; // support zig 0.11 as well as current master
 
 pub const Navigation = struct {
     pub usingnamespace @import("../internal.zig").All(Navigation);
@@ -11,7 +12,7 @@ pub const Navigation = struct {
     peer: ?backend.Container = null,
     widget_data: Navigation.WidgetData = .{},
 
-    relayouting: std.atomic.Value(bool) = std.atomic.Value(bool).init(false),
+    relayouting: AtomicValue(bool) = AtomicValue(bool).init(false),
     routeName: Atom([]const u8),
     activeChild: *Widget,
     routes: std.StringHashMap(Widget),

@@ -5,6 +5,7 @@ const internal = @import("../internal.zig");
 const Size = dataStructures.Size;
 const Atom = dataStructures.Atom;
 const StringAtom = dataStructures.StringAtom;
+const AtomicValue = if (@hasDecl(std.atomic, "Value")) std.atomic.Value else std.atomic.Atomic; // support zig 0.11 as well as current master
 
 pub const TextField = struct {
     pub usingnamespace internal.All(TextField);
@@ -14,7 +15,7 @@ pub const TextField = struct {
     widget_data: TextField.WidgetData = .{},
     text: StringAtom = StringAtom.of(""),
     readOnly: Atom(bool) = Atom(bool).of(false),
-    _wrapperTextBlock: std.atomic.Value(bool) = std.atomic.Value(bool).init(false),
+    _wrapperTextBlock: AtomicValue(bool) = AtomicValue(bool).init(false),
 
     pub fn init(config: TextField.Config) TextField {
         var field = TextField.init_events(TextField{

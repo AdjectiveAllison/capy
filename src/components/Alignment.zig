@@ -4,6 +4,7 @@ const internal = @import("../internal.zig");
 const Size = @import("../data.zig").Size;
 const Atom = @import("../data.zig").Atom;
 const Widget = @import("../widget.zig").Widget;
+const AtomicValue = if (@hasDecl(std.atomic, "Value")) std.atomic.Value else std.atomic.Atomic; // support zig 0.11 as well as current master
 
 pub const Alignment = struct {
     pub usingnamespace @import("../internal.zig").All(Alignment);
@@ -12,7 +13,7 @@ pub const Alignment = struct {
     widget_data: Alignment.WidgetData = .{},
 
     child: Widget,
-    relayouting: std.atomic.Value(bool) = std.atomic.Value(bool).init(false),
+    relayouting: AtomicValue(bool) = AtomicValue(bool).init(false),
     x: Atom(f32) = Atom(f32).of(0.5),
     y: Atom(f32) = Atom(f32).of(0.5),
 

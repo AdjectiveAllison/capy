@@ -20,8 +20,9 @@ const GTK_VERSION = std.SemanticVersion.Range{
 };
 
 pub const Capabilities = .{ .useEventLoop = true };
+const AtomicValue = if (@hasDecl(std.atomic, "Value")) std.atomic.Value else std.atomic.Atomic; // support zig 0.11 as well as current master
 
-var activeWindows = std.atomic.Value(usize).init(0);
+var activeWindows = AtomicValue(usize).init(0);
 var randomWindow: *c.GtkWidget = undefined;
 
 var hasInit: bool = false;

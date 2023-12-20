@@ -9,6 +9,7 @@ const EGLContext = android.egl.EGLContext;
 const JNI = android.JNI;
 const NativeActivity = android.NativeActivity;
 const c = android.egl.c;
+const AtomicValue = if (@hasDecl(std.atomic, "Value")) std.atomic.Value else std.atomic.Atomic; // support zig 0.11 as well as current master
 
 const app_log = std.log.scoped(.app);
 comptime {
@@ -32,7 +33,7 @@ pub const AndroidApp = struct {
     pipe: [2]std.os.fd_t = undefined,
     // This is used with futexes so that runOnUiThread waits until the callback is completed
     // before returning.
-    uiThreadCondition: std.atomic.Value(u32) = std.atomic.Value(u32).init(0),
+    uiThreadCondition: AtomicValue(u32) = AtomicValue(u32).init(0),
     uiThreadLooper: *android.ALooper = undefined,
     uiThreadId: std.Thread.Id = undefined,
 
