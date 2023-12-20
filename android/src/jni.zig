@@ -1,6 +1,7 @@
 const std = @import("std");
 const log = std.log.scoped(.jni);
 const android = @import("android-support.zig");
+const trait = @import("../../src/trait.zig");
 
 /// Wraps JNIEnv to provide a better Zig API.
 /// *android.JNIEnv can be directly cast to `*JNI`. For example:
@@ -34,7 +35,7 @@ pub const JNI = opaque {
         if (jni.invokeJniNoException(.ExceptionCheck, .{}) == android.JNI_TRUE) {
             log.err("Encountered exception while calling: {s} {any}", .{ @tagName(function), args });
             inline for (args, 0..) |arg, i| {
-                if (comptime std.meta.trait.isZigString(@TypeOf(arg))) {
+                if (comptime trait.isZigString(@TypeOf(arg))) {
                     log.err("Arg {d}: {s}", .{ i, arg });
                 }
             }

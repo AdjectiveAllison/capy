@@ -7,6 +7,7 @@ const Size = @import("data.zig").Size;
 const Rectangle = @import("data.zig").Rectangle;
 const containers = @import("containers.zig");
 const Atom = @import("data.zig").Atom;
+const trait = @import("trait.zig");
 
 pub const GenericListModel = struct {
     size: *Atom(usize),
@@ -60,7 +61,7 @@ pub const List = struct {
 };
 
 pub inline fn columnList(config: containers.GridConfig, model: anytype) anyerror!List {
-    if (comptime !std.meta.trait.isPtrTo(.Struct)(@TypeOf(model))) {
+    if (comptime !trait.isPtrTo(.Struct)(@TypeOf(model))) {
         @compileError("Expected a mutable pointer to the list model");
     }
     var row = try containers.column(config, .{});
